@@ -1,0 +1,45 @@
+
+import mongoose from 'mongoose';
+
+const fabricSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  category: {
+    type: String,
+    enum: ['suit', 'shirt', 'trouser', 'overcoat', 'daura', 'kurta'],
+    required: true
+  },
+  meterPrice: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  color: {
+    type: String,
+    trim: true
+  },
+  colorHex: {
+    type: String,
+    match: /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/
+  },
+  image: {
+    url: String,
+    public_id: String
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  }
+}, {
+  timestamps: true
+});
+
+fabricSchema.index({ category: 1, isActive: 1 });
+
+const Fabric = mongoose.model('Fabric', fabricSchema);
+
+export default Fabric;
+

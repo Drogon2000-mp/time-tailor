@@ -1,0 +1,217 @@
+/* iTailor BookAppointment - Dark Elegant Theme */
+:root {
+  --black: #0a0a0a;
+  --gray-dark: #1a1a1a;
+  --white: #ffffff;
+  --gold: #d4af37;
+  --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.appointment-container {
+  min-height: 100vh;
+  padding: 6rem 5% 4rem;
+  background: var(--black);
+  color: var(--white);
+  position: relative;
+}
+
+.appointment-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+}
+
+.appointment-container h2 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 200;
+  text-align: center;
+  letter-spacing: -1px;
+  margin-bottom: 4rem;
+  color: var(--white);
+  position: relative;
+}
+
+.appointment-container h2::after {
+  content: '';
+  position: absolute;
+  bottom: -1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: var(--gold);
+}
+
+.appointment-form {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  background: var(--gray-dark);
+  padding: 3rem;
+  border-radius: 8px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  box-shadow: var(--shadow);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+label {
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  color: var(--white);
+  opacity: 0.9;
+}
+
+.form-input, .form-textarea, .form-select, .date-picker {
+  width: 100%;
+  padding: 1.25rem 1.5rem;
+  background: var(--black);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 4px;
+  color: var(--white);
+  font-size: 1rem;
+  font-family: inherit;
+  transition: var(--transition);
+}
+
+.form-input::placeholder, .form-textarea::placeholder {
+  color: rgba(255,255,255,0.4);
+}
+
+.form-input:focus, .form-textarea:focus, .form-select:focus, .date-picker:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+  background: var(--gray-dark);
+}
+
+.time-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--black);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 8px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.time-slot {
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 6px;
+  background: var(--gray-dark);
+  color: var(--white);
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.time-slot:hover:not(:disabled) {
+  border-color: var(--gold);
+  background: var(--gold);
+  color: var(--black);
+  transform: translateY(-2px);
+}
+
+.time-slot.active {
+  border-color: var(--gold);
+  background: var(--gold);
+  color: var(--black);
+  box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+}
+
+.time-slot:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--black);
+}
+
+.book-btn {
+  padding: 1.5rem 3rem;
+  background: var(--gold);
+  color: var(--black);
+  border: none;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 1rem;
+  align-self: center;
+}
+
+.book-btn:hover:not(:disabled) {
+  background: var(--black);
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+
+.book-btn:disabled {
+  background: rgba(212, 175, 55, 0.5);
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Scrollbar for time slots */
+.time-slots::-webkit-scrollbar {
+  width: 6px;
+}
+
+.time-slots::-webkit-scrollbar-track {
+  background: var(--black);
+}
+
+.time-slots::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 3px;
+}
+
+.time-slots::-webkit-scrollbar-thumb:hover {
+  background: #b8942f;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .appointment-container {
+    padding: 4rem 2rem 2rem;
+  }
+  
+  .appointment-form {
+    padding: 2rem;
+  }
+  
+  .time-slots {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 0.75rem;
+  }
+}
+
+/* Loading state */
+.time-slots:empty::before {
+  content: 'Loading available slots...';
+  grid-column: 1 / -1;
+  padding: 2rem;
+  text-align: center;
+  color: rgba(255,255,255,0.6);
+  font-style: italic;
+}

@@ -1,0 +1,1 @@
+- [x] Step 3: Update client/src/pages/Dashboard.jsx - Link \"Edit Profile\" button to /profile.\n- [x] Step 4: Test profile update saves measurements (use /api/users/profile PUT).\n\n**Profile Management complete!** See changes in TODO-PROFILE.md.
