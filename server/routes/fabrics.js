@@ -1,4 +1,4 @@
-// Fabric Routes - Admin manage fabrics, Users view
+ // Fabric Routes - Admin manage fabrics, Users view
 import express from 'express';
 import { body, validationResult } from 'express-validator';
 import Fabric from '../models/Fabric.js';
