@@ -197,7 +197,7 @@ function ProductDetail() {
                 NPR {currentPrice.toLocaleString()}
                 {selectedSizeData?.priceAdjustment > 0 && (
                   <span style={{ fontSize: '0.9rem', color: '#666', marginLeft: '10px' }}>
-                    (Base: NPR {basePrice.toLocaleString()} + {selectedSizeData.priceAdjustment})
+                    (Base: NPR {parseInt(basePrice, 10).toLocaleString()} + {selectedSizeData.priceAdjustment})
                   </span>
                 )}
               </p>
@@ -265,7 +265,7 @@ function ProductDetail() {
                     disabled={!selectedSize || qty <= 0 || !selectedSizeData?.available}
                     className="add-to-cart-btn"
                   >
-                    Add to Cart - NPR {(currentPrice * qty).toLocaleString()}
+                  Add to Cart - NPR {parseInt(currentPrice * qty, 10).toLocaleString()}
                   </button>
                 </div>
               )}

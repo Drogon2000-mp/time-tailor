@@ -34,7 +34,7 @@ function ProductCard({ product, onViewDetails }) {
       <div className="product-info">
         <h3>{product.name}</h3>
         <p className="category">{product.category}</p>
-        <p className="price">₹ {Number(product.basePrice || product.price || 0).toLocaleString('en-IN')}</p>
+        <p className="price">₹ {parseInt(product.basePrice || product.price || 0, 10).toLocaleString('en-IN')}</p>
         <button 
           className="view-details-btn"
           onClick={handleViewDetailsClick}

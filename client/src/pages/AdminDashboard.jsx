@@ -309,11 +309,13 @@ function AdminDashboard() {
       const imageUrl = uploadRes.data.data.imageUrl;
 
       const createRes = await axios.post(`${API_BASE}/fabrics`, {
-        name: fabricForm.name,
-        category: fabricForm.category,
-        meterPrice: parseFloat(fabricForm.meterPrice),
-        imageUrl
-      }, {
+    name: fabricForm.name,
+    category: fabricForm.category,
+    pricePerMeter: parseInt(fabricForm.meterPrice, 10),
+    image: imageUrl,
+    color: "Default",
+    colorHex: "#000000"
+}, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -415,9 +417,15 @@ function AdminDashboard() {
       // Prepare product data (match model: images [{url, alt}])
       const productData = {
         name: productForm.name,
-        category: productForm.category === 'suit' ? 'complete-suit' : productForm.category,
+        category: (() => {
+          if (productForm.category === 'suit') return 'complete-suit';
+          if (['shirt', 'trouser', 'overcoat', 'waistcoat'].includes(productForm.category)) return 'suit-pant-shirt-overcoat';
+          if (productForm.category === 'daura') return 'daura-suruwal';
+          if (productForm.category === 'kurta') return 'kurta-suruwal';
+          return productForm.category;
+        })(),
 
-        basePrice: parseFloat(productForm.basePrice),
+        basePrice: parseInt(productForm.basePrice, 10),
         stock: parseInt(productForm.stock),
         description: productForm.description || '',
         sizes: Array.isArray(productForm.sizes) ? productForm.sizes : productForm.sizes.split(',').map(s => ({ size: s.trim(), available: 10 })),
@@ -877,6 +885,12 @@ setProductForm({
                   <option value="overcoat">Overcoat</option>
                   <option value="daura">Daura Suruwal</option>
                   <option value="kurta">Kurta Suruwal</option>
+                  <option value="wool">Wool</option>
+                  <option value="cotton">Cotton</option>
+                  <option value="silk">Silk</option>
+                  <option value="linen">Linen</option>
+                  <option value="blend">Blend</option>
+                  <option value="velvet">Velvet</option>
                 </select>
                 
                 <button type="submit" className="btn-primary" disabled={uploadingFabric || !fabricFile}>
@@ -891,10 +905,10 @@ setProductForm({
               ) : (
                 fabrics.map(fabric => (
                   <div key={fabric._id} className="gallery-item-admin">
-                    <img src={fabric.imageUrl || fabric.image?.url} alt={fabric.name} />
+<img src={fabric.image || fabric.imageUrl || fabric.image?.url} alt={fabric.name} />
                     <div className="gallery-item-info">
                       <span>{fabric.name}</span>
-                      <span>रु. {fabric.meterPrice?.toLocaleString()}/m</span>
+                      <span>रु. {parseInt(fabric.pricePerMeter || 0, 10).toLocaleString()}/m</span>
                       <span>{fabric.category}</span>
                     </div>
                     <button className="delete-btn" onClick={() => deleteFabric(fabric._id)}>
@@ -933,7 +947,7 @@ setProductForm({
                     <div className="product-info">
                       <h3 className="product-name">{product.name}</h3>
                       <span className="product-category">{product.category}</span>
-                      <p className="product-price">₹ {Number(product.price || product.basePrice || 0).toLocaleString('en-IN')}</p>
+                      <p className="product-price"> रु. {parseInt(product.basePrice || 0, 10).toLocaleString('en-IN')}</p>
                       <div className="product-sizes">
                         {product.sizes?.map((size, idx) => (
                           <span key={idx} className="size-badge">{typeof size === 'object' ? size.size : size}</span>
@@ -1007,20 +1021,20 @@ setProductForm({
                 </div>
                 <div className="form-group">
                   <label>Category *</label>
-                  <select
-                    value={productForm.category}
-                    onChange={(e) => setProductForm({ ...productForm, category: e.target.value })}
-                    className="form-input"
-                  >
-                    <option value="suit">Suit</option>
-                    <option value="shirt">Shirt</option>
-                    <option value="trouser">Trouser</option>
-                    <option value="overcoat">Overcoat</option>
-                    <option value="waistcoat">Waistcoat</option>
-                    <option value="daura">Daura Suruwal</option>
-                    <option value="kurta">Kurta Suruwal</option>
-                    <option value="jwari">Jwari Coat</option>
-                  </select>
+                <select
+                  value={productForm.category}
+                  onChange={(e) => setProductForm({ ...productForm, category: e.target.value })}
+                  className="form-input"
+                >
+                  <option value="suit">Suit</option>
+                  <option value="shirt">Shirt</option>
+                  <option value="trouser">Trouser</option>
+                  <option value="overcoat">Overcoat</option>
+                  <option value="waistcoat">Waistcoat</option>
+                  <option value="daura">Daura Suruwal</option>
+                  <option value="kurta">Kurta Suruwal</option>
+                  <option value="jwari">Jwari Coat</option>
+                </select>
                 </div>
               </div>
 

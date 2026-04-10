@@ -29,7 +29,7 @@ const fabricSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['wool', 'cotton', 'silk', 'linen', 'blend', 'velvet'],
+    enum: ['suit', 'shirt', 'trouser', 'overcoat', 'daura', 'kurta', 'wool', 'cotton', 'silk', 'linen', 'blend', 'velvet'],
     default: 'blend'
   },
   description: {

@@ -221,12 +221,13 @@ const [galleryImages, setGalleryImages] = useState([]);
                   fabrics.map(fabric => (
                     <div key={fabric._id} className="gallery-item">
                       <img 
-                        src={fabric.image?.url || '/placeholder-fabric.jpg'} 
+                        src={fabric.image || fabric.imageUrl || fabric.image?.url || '/placeholder-fabric.jpg'} 
                         alt={fabric.name} 
                       />
                       <div className="gallery-info">
                         <h3>{fabric.name}</h3>
                         <p>रु. {fabric.pricePerMeter?.toLocaleString()} / meter</p>
+                        <p>रु. {parseInt(fabric.pricePerMeter || 0, 10).toLocaleString()}/m</p>
                         <p>{fabric.category}</p>
                       </div>
                     </div>
@@ -237,6 +238,7 @@ const [galleryImages, setGalleryImages] = useState([]);
           </div>
         );
       case 'custom':
+
         return (
           <div className="dashboard-tab-content fade-in">
             <div className="container">
