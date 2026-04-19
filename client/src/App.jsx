@@ -12,7 +12,6 @@ import PublicLanding from './pages/PublicLanding.jsx';
 import ProtectedDashboard from './pages/ProtectedDashboard.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
 import PlaceOrder from './pages/PlaceOrder.jsx';
-import CustomTailoring from './pages/CustomTailoring.jsx';
 import Profile from './pages/Profile.jsx';
 import Services from './pages/Services.jsx';
 import Gallery from './pages/Gallery.jsx';
@@ -75,12 +74,12 @@ function AppContent() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<ProtectedDashboard />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
-        <Route path="/place-order" element={<PlaceOrder />} />
-        <Route path="/custom-tailoring" element={<CustomTailoring />} />
+
+
         <Route path="/profile" element={<Profile />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/services" element={<Services />} />
-        <Route path="/measurements" element={<Profile />} />
+
         <Route path="/book-appointment" element={<BookAppointment />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/cart" element={<Cart />} />

@@ -81,7 +81,7 @@ function Cart() {
     <div className="dashboard">
       <div className="dashboard-card">
         <h2>Cart is empty</h2>
-        <Link to="/catalog" className="book-btn">Continue Shopping</Link>
+        <Link to="/products" className="book-btn">Continue Shopping</Link>
       </div>
     </div>
   );
@@ -90,7 +90,7 @@ function Cart() {
     <div className="dashboard">
       <header className="dashboard-header">
         <h1>Shopping Cart ({cart.length} items)</h1>
-        <Link to="/catalog" className="view-btn">← Continue Shopping</Link>
+        <Link to="/products" className="view-btn">← Continue Shopping</Link>
       </header>
       
       <div className="dashboard-content">

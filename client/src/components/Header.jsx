@@ -78,7 +78,7 @@ const Header = ({ user }) => {
           {dropdownOpen && (
             <div className="dropdown-menu">
               <Link to="/profile" className="dropdown-item">Edit Profile</Link>
-              <Link to="/profile" className="dropdown-item">Upload Measurements</Link>
+
               <button onClick={handleLogout} className="dropdown-item logout">Logout</button>
             </div>
           )}

@@ -2,14 +2,8 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-const measurementSchema = new mongoose.Schema({
-  jacket: { type: mongoose.Schema.Types.Mixed, default: {} },
-  shirt: { type: mongoose.Schema.Types.Mixed, default: {} },
-  overcoat: { type: mongoose.Schema.Types.Mixed, default: {} },
-  trousers: { type: mongoose.Schema.Types.Mixed, default: {} },
-  general: { type: mongoose.Schema.Types.Mixed, default: {} },
-  body: { type: mongoose.Schema.Types.Mixed, default: {} }
-}, { _id: false });
+
+
 
 
 const userSchema = new mongoose.Schema({
@@ -58,10 +52,7 @@ const userSchema = new mongoose.Schema({
     },
     default: {}
   },
-  measurements: {
-    type: measurementSchema,
-    default: () => ({})
-  },
+
   orders: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Order'

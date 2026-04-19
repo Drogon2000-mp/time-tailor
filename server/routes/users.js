@@ -53,38 +53,17 @@ router.put('/profile', authenticate, [
       });
     }
 
-    const { name, phone, measurements } = req.body;
+    const { name, phone } = req.body;
     const updates = {};
     
     if (name) updates.name = name;
     if (phone) updates.phone = phone;
 
-    // Handle measurements update if provided
-    if (measurements && typeof measurements === 'object') {
-      const user = await User.findById(req.user._id);
-      
-      if (user) {
-        const categories = ['jacket', 'shirt', 'overcoat', 'trousers', 'general', 'body'];
-        
-        categories.forEach(category => {
-          if (measurements[category] && typeof measurements[category] === 'object') {
-            // Convert to plain object if needed and set values
-            user.measurements[category] = {
-              ...(user.measurements[category] || {}),
-              ...measurements[category]
-            };
-          }
-        });
-        
-        await user.save();
-      }
-    } else if (Object.keys(updates).length > 0) {
-      await User.findByIdAndUpdate(
-        req.user._id,
-        { $set: updates },
-        { new: true, runValidators: true }
-      );
-    }
+    await User.findByIdAndUpdate(
+      req.user._id,
+      { $set: updates },
+      { new: true, runValidators: true }
+    );
 
     const user = await User.findById(req.user._id)
       .populate('orders')
@@ -103,57 +82,7 @@ router.put('/profile', authenticate, [
   }
 });
 
-// @route   PUT /api/users/measurements
-// @desc    Update user measurements
-// @access  Private
-router.put('/measurements', authenticate, async (req, res) => {
-  try {
-    const { measurements } = req.body;
 
-    if (!measurements || typeof measurements !== 'object') {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid measurements data'
-      });
-    }
-
-    const user = await User.findById(req.user._id);
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found"
-      });
-    }
-
-    // Properly merge measurements for each category
-    const categories = ['jacket', 'shirt', 'overcoat', 'trousers', 'general', 'body'];
-    
-    categories.forEach(category => {
-      if (measurements[category] && typeof measurements[category] === 'object') {
-        // Merge into plain object (Mongoose handles Map conversion)
-        user.measurements[category] = {
-          ...(user.measurements[category] || {}),
-          ...measurements[category]
-        };
-      }
-    });
-
-    await user.save();
-
-    res.json({
-      success: true,
-      data: user.measurements
-    });
-
-  } catch (error) {
-    console.error('Measurement error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
-  }
-});
 
 // @route   PUT /api/users/preferences
 // @desc    Save user tailoring preferences
