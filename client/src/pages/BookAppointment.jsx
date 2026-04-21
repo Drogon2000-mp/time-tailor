@@ -12,7 +12,10 @@ function BookAppointment() {
     type: 'measurement',
     notes: '',
     phone: '',
-    email: ''
+    email: '',
+    district: '',
+    area: '',
+    fullAddress: '',
   });
   const [timeSlots, setTimeSlots] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -20,7 +23,7 @@ function BookAppointment() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  const phoneRegex = /^(9|98)\d{8}$/;
+  const phoneRegex = /^(98|97)\d{8}$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   // Load user profile
@@ -63,26 +66,35 @@ function BookAppointment() {
   const validate = () => {
     if (!formData.date) return 'Date required';
     if (!formData.time) return 'Time required';
-    if (formData.phone && !phoneRegex.test(formData.phone)) return 'Invalid phone';
+    if (!formData.phone || !phoneRegex.test(formData.phone)) return 'Valid Nepali phone required (98/97xxxxxxxx)';
     if (formData.email && !emailRegex.test(formData.email)) return 'Invalid email';
+    if (!formData.district?.trim() || formData.district.length < 3) return 'District required (min 3 chars)';
+    if (!formData.area?.trim() || formData.area.length < 3) return 'Area required (min 3 chars)';
+    if (!formData.fullAddress?.trim() || formData.fullAddress.length < 5) return 'Full address required (min 5 chars)';
     return null;
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const error = validate();
-    if (error) return toast.error(error);
-
-    setLoading(true);
-    try {
-      await api.post('/appointments', formData);
-      toast.success('Booked! Awaiting approval.');
-      navigate('/dashboard');
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Booking failed');
-    }
-    setLoading(false);
-  };
+      e.preventDefault();
+      const error = validate();
+      if (error) return toast.error(error);
+      
+      setLoading(true);
+      try {
+        const submitData = {
+          ...formData,
+          location: {
+            address: `${formData.district || ''}, ${formData.area || ''}, ${formData.fullAddress || ''}`.trim()
+          }
+        };
+        await api.post('/appointments', submitData);
+        toast.success('Booked! Awaiting approval.');
+        navigate('/dashboard');
+      } catch (err) {
+        toast.error(err.response?.data?.message || 'Booking failed');
+      }
+      setLoading(false);
+    };
 
   return (
     <div className="appointment-container">
@@ -131,24 +143,61 @@ function BookAppointment() {
         </div>
 
         <div>
-          <label>Phone {formData.phone ? '' : '(optional)'}</label>
+        <label>Phone * REQUIRED (Nepali 98/97xxxxxxxx format)</label>
           <input
             type="tel"
-            value={formData.phone || ''}
-            onChange={e => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+            value={formData.phone ?? ''}
+            onChange={e => setFormData(prev => ({ ...prev, phone: e.target.value || undefined }))}
             className="form-input"
             placeholder="9841234567"
           />
         </div>
 
         <div>
-          <label>Email {formData.email ? '' : '(optional)'}</label>
+          <label>Email (optional)</label>
           <input
             type="email"
-            value={formData.email || ''}
-            onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))}
+            value={formData.email ?? ''}
+            onChange={e => setFormData(prev => ({ ...prev, email: e.target.value || undefined }))}
             className="form-input"
             placeholder="user@example.com"
+          />
+        </div>
+
+        <div className="form-row">
+          <div>
+            <label>District *</label>
+            <input
+              type="text"
+              value={formData.district ?? ''}
+              onChange={e => setFormData(prev => ({ ...prev, district: e.target.value }))}
+              className="form-input"
+              placeholder="Kathmandu"
+              required
+            />
+          </div>
+          <div>
+            <label>Area *</label>
+            <input
+              type="text"
+              value={formData.area ?? ''}
+              onChange={e => setFormData(prev => ({ ...prev, area: e.target.value }))}
+              className="form-input"
+              placeholder="Thamel"
+              required
+            />
+          </div>
+        </div>
+
+        <div>
+          <label>Full Address *</label>
+          <input
+            type="text"
+            value={formData.fullAddress ?? ''}
+            onChange={e => setFormData(prev => ({ ...prev, fullAddress: e.target.value }))}
+            className="form-input"
+            placeholder="Street no, house no, landmarks"
+            required
           />
         </div>
 

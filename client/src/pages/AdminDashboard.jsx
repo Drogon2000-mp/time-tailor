@@ -425,7 +425,7 @@ function AdminDashboard() {
           return productForm.category;
         })(),
 
-        basePrice: parseInt(productForm.basePrice, 10),
+        basePrice: Number(productForm.basePrice),
         stock: parseInt(productForm.stock),
         description: productForm.description || '',
         sizes: Array.isArray(productForm.sizes) ? productForm.sizes : productForm.sizes.split(',').map(s => ({ size: s.trim(), available: 10 })),
@@ -666,7 +666,8 @@ setProductForm({
                   <tr>
                     <th>Customer</th>
                     <th>Service</th>
-                    <th>Preferred Date</th>
+                    <th>Date/Time</th>
+                    <th>Location</th>
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>
@@ -681,14 +682,16 @@ setProductForm({
                       <tr key={apt._id}>
                         <td>
                           <div className="customer-info">
-                            <strong>{apt.user?.name}</strong>
+                            <strong>{apt.user?.name || 'Guest'}</strong>
+                            <div style={{marginTop: '0.25rem'}}>
+<strong><a href={'tel:' + (apt.phone || apt.user?.phone)} style={{color: 'inherit', textDecoration: 'none'}}>📱 {apt.phone || apt.user?.phone}</a></strong>
+                            </div>
                             <small>{apt.user?.email || apt.email}</small>
-                            <small>{apt.user?.phone || apt.phone}</small>
                           </div>
                         </td>
                         <td>{apt.type || 'General'}</td>
                         <td>{new Date(apt.date).toLocaleDateString()} {apt.time}</td>
-                        <td>{apt.notes?.substring(0, 50)}...</td>
+                        <td>{apt.location?.address || 'N/A'}</td>
                         <td>
                           <span className={`status-badge status-${apt.status}`}>
                             {apt.status.charAt(0).toUpperCase() + apt.status.slice(1)}
@@ -947,7 +950,7 @@ setProductForm({
                     <div className="product-info">
                       <h3 className="product-name">{product.name}</h3>
                       <span className="product-category">{product.category}</span>
-                      <p className="product-price"> रु. {parseInt(product.basePrice || 0, 10).toLocaleString('en-IN')}</p>
+                      <p className="product-price"> रु. {product.basePrice?.toLocaleString('en-IN') || '0'}</p>
                       <div className="product-sizes">
                         {product.sizes?.map((size, idx) => (
                           <span key={idx} className="size-badge">{typeof size === 'object' ? size.size : size}</span>

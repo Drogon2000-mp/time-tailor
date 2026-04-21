@@ -33,6 +33,7 @@ import fabricRoutes from './routes/fabrics.js';
 import buttonDesignRoutes from './routes/buttonDesigns.js';
 import galleryRoutes from './routes/gallery.js';
 import productRoutes from './routes/products.js';
+import otpRoutes from './routes/otp.js';
 
 const app = express();
 
@@ -187,6 +188,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/appointments', appointmentRoutes);
+app.use('/api/otp', otpRoutes);
 app.use('/api/fabrics', fabricRoutes);
 app.use('/api/button-designs', buttonDesignRoutes);
 app.use('/api/gallery', galleryRoutes);

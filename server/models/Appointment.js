@@ -10,11 +10,12 @@ const appointmentSchema = new mongoose.Schema({
   phone: {
     type: String,
     trim: true,
+    required: [true, 'Phone number is required'],
     validate: {
       validator: function(v) {
-        return !v || /^(9|98)\d{8}$/.test(v);
+        return /^(98|97)\d{8}$/.test(v);
       },
-      message: 'Invalid Nepali phone number'
+      message: 'Invalid Nepali phone number (98/97 + 8 digits)'
     }
   },
   email: {
@@ -70,6 +71,13 @@ const appointmentSchema = new mongoose.Schema({
     },
     comment: String,
     submittedAt: Date
+  },
+  location: {
+    address: {
+      type: String,
+      required: [true, 'Address is required'],
+      maxlength: [500, 'Address too long']
+    }
   }
 }, {
   timestamps: true

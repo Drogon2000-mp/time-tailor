@@ -125,7 +125,7 @@ router.post('/', authenticate, requireAdmin, [
       name: req.body.name,
       description: req.body.description || '',
       category: req.body.category || 'suit',
-    basePrice: parseInt(req.body.basePrice, 10),
+    basePrice: Number(req.body.basePrice),
       sizes: (req.body.sizes || ['M']).map(s => {
         if (typeof s === 'string') return { size: s.trim(), available: 10, priceAdjustment: 0 };
         return { size: s.size || 'M', available: s.available || 10, priceAdjustment: s.priceAdjustment || 0 };

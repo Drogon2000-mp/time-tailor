@@ -16,13 +16,15 @@ router.post('/', authenticate, [
   body('time').notEmpty().withMessage('Time is required'),
   body('type').isIn(['consultation', 'measurement', 'fitting', 'delivery'])
     .withMessage('Invalid appointment type'),
-  body('phone').optional({ checkFalsy: true })
-    .matches(/^(9|98)\d{8}$/)
-    .withMessage('Invalid Nepali phone number (e.g. 9841234567 or 9812345678)'),
+  body('phone').notEmpty().withMessage('Phone number is required')
+    .matches(/^(98|97)\d{8}$/)
+    .withMessage('Invalid Nepali phone (98/97 + 8 digits)'),
   body('email').optional({ checkFalsy: true })
     .isEmail()
     .normalizeEmail()
-    .withMessage('Invalid email address')
+    .withMessage('Invalid email address'),
+  body('location.address').notEmpty().withMessage('Address is required')
+    .isLength({ min: 10 }).withMessage('Address must be at least 10 characters')
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -33,7 +35,21 @@ router.post('/', authenticate, [
       });
     }
 
-    const { date, time, type, notes, service, phone, email } = req.body;
+    const { date, time, type, notes, service, phone, email, location } = req.body;
+
+    // Anti-spam: Max 3 bookings per phone per hour
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+    const recentBookings = await Appointment.countDocuments({
+      phone,
+      createdAt: { $gte: oneHourAgo },
+      status: { $ne: 'cancelled' }
+    });
+    if (recentBookings >= 3) {
+      return res.status(429).json({
+        success: false,
+        message: 'Too many bookings from this phone number. Please wait 1 hour or use different number.'
+      });
+    }
 
     // Check slot availability
     const existingAppointment = await Appointment.findOne({
@@ -56,8 +72,9 @@ router.post('/', authenticate, [
       type,
       notes,
       service,
-      phone: phone || undefined,  // Store if provided
-      email: email || undefined   // Store if provided (overrides user email if needed)
+      phone: phone || undefined,
+      email: email || undefined,
+      location: location || undefined
     });
 
     await appointment.save();

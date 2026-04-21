@@ -107,7 +107,7 @@ function PublicLanding() {
     }
   }, [galleryImages]);
 
-  const staticServices = [
+const staticServices = [
     {
       name: "Custom Tailoring",
       content: `
@@ -158,7 +158,6 @@ function PublicLanding() {
     },
     {
       name: "Style Consultation",
-      image: "/images/src/image 1.jpeg",
       content: `
         <p>Not sure what suits you best?</p>
         <ul>
@@ -170,7 +169,6 @@ function PublicLanding() {
     },
     {
       name: "Order Tracking & Delivery",
-      image: "/images/src/image 2.jpeg",
       content: `
         <p>Stay updated every step of the way.</p>
         <ul>
@@ -181,6 +179,7 @@ function PublicLanding() {
       `
     }
   ];
+
 
   if (loading) return <div className="loading">Loading...</div>;
 
@@ -227,16 +226,15 @@ function PublicLanding() {
           <div className="services-grid products-grid">
             {products.slice(0, 8).map(product => (
               <div key={product._id} className="service-card">
-                <Link to={`/product/${product._id}`} className="product-link">
-                <img src={product.images[0]?.url || '/images/suits/two-piece.jpg'} alt={product.name} />
+
+                <button onClick={() => handleProtectedNav(`/product/${product._id}`)} className="product-link">
+                <img src={product.images[0]?.url || '/images/suits/two-piece.jpg'} alt={product.name} className="product-gallery-img" />
                   <h3>{product.name}</h3>
                   <p className="price">₹{product.basePrice.toLocaleString()}</p>
-                </Link>
+                </button>
+
               </div>
             ))}
-          </div>
-          <div className="section-cta">
-            <button onClick={() => handleProtectedNav('/catalog')} className="cta-button large prominent">View Full Catalog</button>
           </div>
         </div>
       </section>
@@ -249,7 +247,7 @@ function PublicLanding() {
             {randomGalleryImages.map(image => (
               <div key={image._id} className="service-card">
                 <div className="gallery-link">
-                  <img src={image.imageUrl || '/images/src/image 1.jpeg'} alt={image.title} />
+                  <img src={image.imageUrl || '/images/src/image 1.jpeg'} alt={image.title} className="product-gallery-img" />
                   <h3>{image.title || image.category || 'Stylish Tailoring'}</h3>
                 </div>
               </div>
@@ -269,14 +267,13 @@ function PublicLanding() {
           <div className="services-grid">
             {staticServices.map((service, index) => (
               <div key={index} className="service-card">
-                <img src={service.image} alt={service.name} className="service-image" />
                 <h3>{service.name}</h3>
                 <div className="service-content" dangerouslySetInnerHTML={{ __html: service.content }} />
               </div>
             ))}
           </div>
           <div className="section-cta">
-            <button onClick={() => handleProtectedNav('/custom-tailoring')} className="cta-button large prominent">Start Custom Order</button>
+            <a href="https://wa.me/+9779840891574?text=Hi%20I%20want%20a%20custom%20order%20from%20Time%20Tailor" className="cta-button large prominent" target="_blank" rel="noopener noreferrer">WhatsApp for Custom Order</a>
           </div>
         </div>
       </section>
@@ -284,7 +281,7 @@ function PublicLanding() {
       {/* Footer */}
       <footer className="footer">
         <div className="container">
-          <p>&copy; 2024 Time Tailor. All rights reserved. | <Link to="/services">Services</Link> | <Link to="/gallery">Gallery</Link></p>
+          <p>&copy; 2024 Time Tailor. All rights reserved.</p>
         </div>
       </footer>
     </>
