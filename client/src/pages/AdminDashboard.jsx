@@ -311,7 +311,7 @@ function AdminDashboard() {
       const createRes = await axios.post(`${API_BASE}/fabrics`, {
     name: fabricForm.name,
     category: fabricForm.category,
-    pricePerMeter: parseInt(fabricForm.meterPrice, 10),
+    pricePerMeter: Math.floor(Number(fabricForm.meterPrice || 0)),
     image: imageUrl,
     color: "Default",
     colorHex: "#000000"
@@ -425,8 +425,8 @@ function AdminDashboard() {
           return productForm.category;
         })(),
 
-        basePrice: Number(productForm.basePrice),
-        stock: parseInt(productForm.stock),
+        basePrice: Math.floor(Number(productForm.basePrice || 0)),
+        stock: Math.floor(Number(productForm.stock || 0)),
         description: productForm.description || '',
         sizes: Array.isArray(productForm.sizes) ? productForm.sizes : productForm.sizes.split(',').map(s => ({ size: s.trim(), available: 10 })),
         images: imageUrls,
@@ -911,7 +911,7 @@ setProductForm({
 <img src={fabric.image || fabric.imageUrl || fabric.image?.url} alt={fabric.name} />
                     <div className="gallery-item-info">
                       <span>{fabric.name}</span>
-                      <span>रु. {parseInt(fabric.pricePerMeter || 0, 10).toLocaleString()}/m</span>
+                      <span>रु. {Math.floor(Number(fabric.pricePerMeter || 0)).toLocaleString()}/m</span>
                       <span>{fabric.category}</span>
                     </div>
                     <button className="delete-btn" onClick={() => deleteFabric(fabric._id)}>

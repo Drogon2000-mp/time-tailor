@@ -147,7 +147,7 @@ function ProductModal({ productId, onClose }) {
               <input 
                 type="number"
                 value={qty}
-                onChange={(e) => setQty(Math.max(1, parseInt(e.target.value) || 1))}
+                onChange={(e) => setQty(Math.max(1, Math.floor(Number(e.target.value)) || 1))}
                 min="1"
                 max={selectedSizeData?.available || 99}
               />

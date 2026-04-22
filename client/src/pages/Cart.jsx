@@ -120,7 +120,7 @@ function Cart() {
                         type="number" 
                         min="1" 
                         value={item.qty} 
-                        onChange={(e) => updateQty(index, parseInt(e.target.value))}
+                        onChange={(e) => updateQty(index, Math.floor(Number(e.target.value)))}
                         className="qty-input"
                       />
                     </td>

@@ -215,7 +215,7 @@ function ProtectedDashboard() {
                       <div className="gallery-info">
                         <h3>{fabric.name}</h3>
                         <p>रु. {fabric.pricePerMeter?.toLocaleString()} / meter</p>
-                        <p>रु. {parseInt(fabric.pricePerMeter || 0, 10).toLocaleString()}/m</p>
+                        <p>रु. {Math.floor(Number(fabric.pricePerMeter || 0)).toLocaleString()}/m</p>
                         <p>{fabric.category}</p>
                       </div>
                     </div>

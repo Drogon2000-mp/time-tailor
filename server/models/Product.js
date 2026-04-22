@@ -9,11 +9,15 @@ const productSizeSchema = new mongoose.Schema({
   available: {
     type: Number,
     min: 0,
-    default: 0
+    default: 0,
+    get: v => Math.floor(Number(v)),
+    set: v => Math.floor(Number(v))
   },
   priceAdjustment: {
     type: Number,
-    default: 0
+    default: 0,
+    get: v => Math.floor(Number(v)),
+    set: v => Math.floor(Number(v))
   }
 });
 
@@ -36,7 +40,9 @@ const productSchema = new mongoose.Schema({
   basePrice: {
     type: Number,
     required: true,
-    min: 0
+    min: 0,
+    get: v => Math.floor(Number(v)),
+    set: v => Math.floor(Number(v))
   },
   sizes: [productSizeSchema],
   images: [{
