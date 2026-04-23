@@ -97,7 +97,7 @@ function ProtectedDashboard() {
                   <button onClick={() => setTab('products')} className="cta-button prominent">
                     Browse Products
                   </button>
-                  <a href="https://wa.me/YOUR_WHATSAPP_NUMBER_HERE?text=Hi%20I%20want%20a%20custom%20order from Time Tailor" className="cta-button secondary" target="_blank" rel="noopener noreferrer">WhatsApp for Custom Order</a>
+                  <a href="https://wa.me/9841519933?text=Hi%20I%20want%20a%20custom%20design%20from%20Time%20Tailor" className="cta-button secondary" target="_blank" rel="noopener noreferrer">WhatsApp for Custom Design</a>
                 </div>
               </div>
             </div>

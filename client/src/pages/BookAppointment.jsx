@@ -215,6 +215,14 @@ function BookAppointment() {
         <button type="submit" disabled={loading} className="book-btn">
           {loading ? 'Booking...' : 'Book Appointment'}
         </button>
+        <button 
+          type="button" 
+          onClick={() => navigate('/dashboard')} 
+          className="book-btn secondary"
+          disabled={loading}
+        >
+          Go Back to Dashboard
+        </button>
       </form>
     </div>
   );

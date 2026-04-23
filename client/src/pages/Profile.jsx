@@ -1,12 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
 function Profile() {
-  const [formData, setFormData] = useState({ name: '', email: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
+  const [preferences, setPreferences] = useState({});
+  const [passwordData, setPasswordData] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,9 +33,11 @@ function Profile() {
         const user = response.data.data;
         setFormData({
           name: user.name || '',
-          email: user.email || ''
+          email: user.email || '',
+          phone: user.phone || ''
         });
-      }
+        setPreferences(user.preferences || {} );
+        }
     } catch (err) {
       toast.error('Failed to load profile');
       navigate('/login');
@@ -41,18 +46,28 @@ function Profile() {
     }
   };
 
-  const handleChange = (e) => {
+  const handleProfileChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+
+
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmitProfile = async (e) => {
     e.preventDefault();
     setSaving(true);
 
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.put('/api/users/profile', { name: formData.name }, {
+      const response = await axios.put('/api/users/profile', { 
+        name: formData.name,
+        phone: formData.phone 
+      }, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -67,52 +82,128 @@ function Profile() {
     }
   };
 
+
+
+  const handleSubmitPassword = async (e) => {
+    e.preventDefault();
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+    setSaving(true);
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.put('/api/users/change-password', passwordData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (response.data.success) {
+        toast.success('Password changed successfully!');
+        setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Password change failed');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+
+
   if (loading) return <div className="loading">Loading profile...</div>;
 
   return (
     <div className="auth-page">
-      <div className="auth-container" style={{ maxWidth: '600px' }}>
-        <h1 className="auth-title">Profile</h1>
-        <p className="auth-subtitle">Update your name</p>
+      <div className="auth-container" style={{ maxWidth: '800px' }}>
+        <h1 className="auth-title">Edit Profile</h1>
 
-        <form onSubmit={handleSubmit} className="auth-form">
+
+
+        {/* Basic Profile Form */}
+        <form onSubmit={handleSubmitProfile} className="auth-form">
+          <h3>Basic Info</h3>
           <div className="form-row">
             <input 
               name="name" 
               placeholder="Full Name" 
               value={formData.name} 
-              onChange={handleChange} 
+              onChange={handleProfileChange} 
               className="auth-input" 
               required 
             />
             <input 
-              name="email" 
-              placeholder="Email" 
-              value={formData.email} 
+              name="phone" 
+              placeholder="Phone" 
+              value={formData.phone} 
+              onChange={handleProfileChange} 
               className="auth-input" 
-              disabled 
             />
           </div>
-
+          <input 
+            name="email" 
+            placeholder="Email" 
+            value={formData.email} 
+            className="auth-input" 
+            disabled 
+          />
           <button type="submit" disabled={saving} className="auth-button">
-            {saving ? 'Saving...' : 'Save Changes'}
+            {saving ? 'Saving...' : 'Update Profile'}
           </button>
         </form>
 
-        <p className="auth-link">
+
+
+        {/* Password Change Form */}
+        <form onSubmit={handleSubmitPassword} className="auth-form" style={{ marginTop: '2rem' }}>
+          <h3>Change Password</h3>
+          <input 
+            type="password" 
+            name="currentPassword" 
+            placeholder="Current Password" 
+            value={passwordData.currentPassword} 
+            onChange={handlePasswordChange} 
+            className="auth-input"
+            required 
+          />
+          <input 
+            type="password" 
+            name="newPassword" 
+            placeholder="New Password (min 6 chars)" 
+            value={passwordData.newPassword} 
+            onChange={handlePasswordChange} 
+            className="auth-input"
+            required 
+          />
+          <input 
+            type="password" 
+            name="confirmPassword" 
+            placeholder="Confirm New Password" 
+            value={passwordData.confirmPassword} 
+            onChange={handlePasswordChange} 
+            className="auth-input"
+            required 
+          />
+          <button type="submit" disabled={saving} className="auth-button">
+            {saving ? 'Changing...' : 'Change Password'}
+          </button>
+        </form>
+
+        <p className="auth-link" style={{ marginTop: '2rem' }}>
           <button onClick={() => navigate('/dashboard')} className="auth-button secondary">
             Back to Dashboard
           </button>
         </p>
 
-        <style jsx>{`
+          <style jsx>{`
           .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
           }
-          .auth-button.secondary {
-            background: #6c757d;
+          h3 {
+            margin-top: 2rem;
+            color: #333;
           }
           @media (max-width: 768px) {
             .form-row {
@@ -126,4 +217,3 @@ function Profile() {
 }
 
 export default Profile;
-

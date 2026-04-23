@@ -273,7 +273,7 @@ const staticServices = [
             ))}
           </div>
           <div className="section-cta">
-            <a href="https://wa.me/+9779840891574?text=Hi%20I%20want%20a%20custom%20order%20from%20Time%20Tailor" className="cta-button large prominent" target="_blank" rel="noopener noreferrer">WhatsApp for Custom Order</a>
+            <a href="https://wa.me/9841519933?text=Hi%20I%20want%20a%20custom%20design%20from%20Time%20Tailor" className="cta-button large prominent" target="_blank" rel="noopener noreferrer">WhatsApp for Custom Design</a>
           </div>
         </div>
       </section>

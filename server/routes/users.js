@@ -38,7 +38,7 @@ router.get('/profile', authenticate, async (req, res) => {
 });
 
 // @route   PUT /api/users/profile
-// @desc    Update user profile
+// @desc    Update user profile (name, phone, picture)
 // @access  Private
 router.put('/profile', authenticate, [
   body('name').optional().trim().notEmpty().withMessage('Name cannot be empty'),
@@ -59,15 +59,11 @@ router.put('/profile', authenticate, [
     if (name) updates.name = name;
     if (phone) updates.phone = phone;
 
-    await User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
       req.user._id,
       { $set: updates },
       { new: true, runValidators: true }
-    );
-
-    const user = await User.findById(req.user._id)
-      .populate('orders')
-      .populate('appointments');
+    ).populate('orders appointments');
 
     res.json({
       success: true,
@@ -82,7 +78,85 @@ router.put('/profile', authenticate, [
   }
 });
 
+// @route   POST /api/users/photo
+// @desc    Upload user profile photo
+// @access  Private
+router.post('/photo', authenticate, app.locals.productUpload.single('photo'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'No photo uploaded'
+      });
+    }
 
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { picture: req.file.path },
+      { new: true }
+    );
+
+    res.json({
+      success: true,
+      data: {
+        picture: user.picture,
+        url: req.file.path
+      }
+    });
+  } catch (error) {
+    console.error('Upload photo error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+});
+
+
+
+// @route   PUT /api/users/change-password
+// @desc    Change user password
+// @access  Private
+router.put('/change-password', authenticate, [
+  body('currentPassword').notEmpty().withMessage('Current password required'),
+  body('newPassword').isLength({ min: 6 }).withMessage('New password must be at least 6 characters'),
+  body('confirmPassword').custom((value, { req }) => value === req.body.newPassword)
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        errors: errors.array()
+      });
+    }
+
+    const { currentPassword, newPassword } = req.body;
+    const user = await User.findById(req.user._id).select('+password');
+
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: 'Current password is incorrect'
+      });
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: 'Password changed successfully'
+    });
+  } catch (error) {
+    console.error('Change password error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+});
 
 // @route   PUT /api/users/preferences
 // @desc    Save user tailoring preferences

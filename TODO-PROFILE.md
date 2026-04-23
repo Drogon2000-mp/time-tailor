@@ -1,1 +1,10 @@
-- [x] Step 3: Update client/src/pages/Dashboard.jsx - Link \"Edit Profile\" button to /profile.\n- [x] Step 4: Test profile update saves measurements (use /api/users/profile PUT).\n\n**Profile Management complete!** See changes in TODO-PROFILE.md.
+# Profile Enhancement Task
+
+## Steps:
+- [x] Step 1: Create TODO-PROFILE.md ✅
+- [x] Step 2: Check backend for change-password, upload endpoints (no change-password endpoint exists; /preferences does. Cloudinary configured globally. Added /change-password, /photo upload in users.js ✅)
+ - [x] Step 3: Add password change, photo upload, preferences to Profile.jsx ✅
+ - [x] Step 4: Update backend if needed ✅
+- [x] Step 5: Test and complete
+
+**Status:** ✅ Complete

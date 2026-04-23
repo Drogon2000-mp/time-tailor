@@ -90,7 +90,7 @@ function Cart() {
     <div className="dashboard">
       <header className="dashboard-header">
         <h1>Shopping Cart ({cart.length} items)</h1>
-        <Link to="/products" className="view-btn">← Continue Shopping</Link>
+        <Link to="/dashboard" className="view-btn" onClick={() => { localStorage.removeItem('catalogCart'); window.location.hash = '#products-tab'; }}>← Continue Shopping</Link>
       </header>
       
       <div className="dashboard-content">
