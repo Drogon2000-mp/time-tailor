@@ -1,10 +1,13 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:5000/api' : '/api');
 
 if (!import.meta.env.VITE_API_URL) {
-  console.warn('[api] Missing VITE_API_URL. Falling back to development URL:', API_URL);
+  const fallbackMessage = import.meta.env.MODE === 'development'
+    ? 'Falling back to development URL:'
+    : 'No production VITE_API_URL set; using relative API path';
+  console.warn('[api]', fallbackMessage, API_URL);
 }
 
 const api = axios.create({
