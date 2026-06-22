@@ -12,8 +12,12 @@ services:
         fromConfigNumeric: MONGODB_URI
       - key: JWT_SECRET
         generateValue: true
+      - key: CLIENT_URL
+        value: https://time-tailor11.onrender.com
+      - key: SERVER_URL
+        value: https://time-tailor11.onrender.com
       - key: FRONTEND_URL
-        value: https://your-frontend.vercel.app
+        value: https://time-tailor11.onrender.com
       - key: ESEWA_SECRET_KEY
         sync: false
       - key: ESEWA_MERCHANT_ID

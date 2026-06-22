@@ -164,8 +164,11 @@ const corsOptions = {
       'https://time-tailor11.onrender.com'
     ];
 
-    // Production: ONLY CLIENT_URL
-    const prodAllowed = [process.env.CLIENT_URL];
+    const prodAllowed = [
+      process.env.CLIENT_URL || process.env.FRONTEND_URL,
+      process.env.SERVER_URL,
+      process.env.RENDER_EXTERNAL_HOSTNAME ? `https://${process.env.RENDER_EXTERNAL_HOSTNAME}` : undefined
+    ].filter(Boolean);
 
     const allowedOrigins = process.env.NODE_ENV === 'production' ? prodAllowed : [...prodAllowed, ...devOrigins];
 
