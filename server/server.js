@@ -234,8 +234,14 @@ app.get('/api/health', (req, res) => {
 
 // Serve built frontend if available
 const clientBuildPath = path.resolve(__dirname, '../client/dist');
+const clientAssetsPath = path.join(clientBuildPath, 'assets');
 if (fs.existsSync(clientBuildPath)) {
   console.log('✅ Serving frontend from:', clientBuildPath);
+  app.use('/assets', (req, res, next) => {
+    console.log(`📦 Asset request: ${req.path}`);
+    next();
+  });
+  app.use('/assets', express.static(clientAssetsPath, { index: false }));
   app.use(express.static(clientBuildPath, { index: false }));
 
   app.get('*', (req, res, next) => {
