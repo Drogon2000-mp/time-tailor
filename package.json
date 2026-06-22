@@ -1,0 +1,15 @@
+{
+  "name": "time-tailor",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "build": "npm --workspace=client run build",
+    "start": "npm --workspace=server start",
+    "dev": "npm --workspace=server run dev"
+  }
+}
