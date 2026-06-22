@@ -48,6 +48,8 @@ import paymentRoutes from './routes/paymentRoutes.js';
 
 
 const app = express();
+// Trust proxy (Render and other PaaS set X-Forwarded-* headers)
+app.set('trust proxy', 1);
 
 // Configure Cloudinary
 cloudinary.config({ // Use v2 directly
@@ -297,7 +299,8 @@ const startServer = async () => {
   
   app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📍 API available at ${process.env.SERVER_URL}/api`); // Removed localhost fallback
+    const publicUrl = process.env.SERVER_URL || process.env.FRONTEND_URL || (process.env.RENDER_EXTERNAL_HOSTNAME ? `https://${process.env.RENDER_EXTERNAL_HOSTNAME}` : `http://localhost:${PORT}`);
+    console.log(`📍 API available at ${publicUrl}/api`);
     if (mongoose.connection.readyState !== 1) {
       console.log(`⚠️  Database: Not connected (some features will not work)`);
     }
