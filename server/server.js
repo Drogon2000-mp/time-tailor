@@ -233,7 +233,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // Serve built frontend if available
-const clientBuildPath = path.resolve(process.cwd(), 'client', 'dist');
+const clientBuildPath = path.resolve(__dirname, '../client/dist');
 if (fs.existsSync(clientBuildPath)) {
   console.log('✅ Serving frontend from:', clientBuildPath);
   app.use(express.static(clientBuildPath, { index: false }));
