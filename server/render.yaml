@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: time-tailor-api
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        fromConfigNumeric: MONGODB_URI
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        value: https://your-frontend.vercel.app
+      - key: ESEWA_SECRET_KEY
+        sync: false
+      - key: ESEWA_MERCHANT_ID
+        value: EPAYTEST

@@ -1,0 +1,1 @@
+# TODO: Fix server/routes/users.js app.locals Error\n\n## Steps:\n- [x] Step 1: Fix multer upload in users.js POST /photo route by moving middleware inside handler using req.app.locals.productUpload\n- [ ] Step 2: Test server startup (node server/server.js)\n- [ ] Step 3: Test photo upload endpoint\n- [ ] Step 4: Complete task

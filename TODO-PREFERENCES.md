@@ -1,0 +1,1 @@
+- [x] Step 2: Add PUT /api/users/preferences to server/routes/users.js.\n- [x] Step 3: Update client/src/pages/CustomTailoring.jsx - Prefill from user.preferences, add Save button.\n\n

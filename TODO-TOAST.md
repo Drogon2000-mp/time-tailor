@@ -1,0 +1,1 @@
+- [x] Update signup.jsx - Replace error div with toast.error/success.\n- [x] Update BookAppointment.jsx - Replace error/success divs with toast.\n\n**Toast upgrade complete!** react-toastify now used consistently. ToastContainer already in App.jsx.
