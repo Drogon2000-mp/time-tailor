@@ -7,6 +7,7 @@ import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary'; // Import v2 directly
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import cookieParser from 'cookie-parser';
 
@@ -160,7 +161,7 @@ const corsOptions = {
     const devOrigins = [
       'http://localhost:5173',
       'http://127.0.0.1:5173',
-      'https://time-tailor.onrender.com'
+      'https://time-tailor11.onrender.com'
     ];
 
     // Production: ONLY CLIENT_URL
@@ -230,6 +231,23 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+
+// Serve built frontend if available
+const clientBuildPath = path.resolve(__dirname, '../client/dist');
+if (fs.existsSync(clientBuildPath)) {
+  app.use(express.static(clientBuildPath));
+
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(clientBuildPath, 'index.html'));
+  });
+
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) {
+      return next();
+    }
+    res.sendFile(path.join(clientBuildPath, 'index.html'));
+  });
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
