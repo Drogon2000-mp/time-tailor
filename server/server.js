@@ -233,20 +233,23 @@ app.get('/api/health', (req, res) => {
 });
 
 // Serve built frontend if available
-const clientBuildPath = path.resolve(__dirname, '../client/dist');
+const clientBuildPath = path.resolve(process.cwd(), 'client', 'dist');
 if (fs.existsSync(clientBuildPath)) {
-  app.use(express.static(clientBuildPath));
-
-  app.get('/', (req, res) => {
-    res.sendFile(path.join(clientBuildPath, 'index.html'));
-  });
+  console.log('✅ Serving frontend from:', clientBuildPath);
+  app.use(express.static(clientBuildPath, { index: false }));
 
   app.get('*', (req, res, next) => {
-    if (req.path.startsWith('/api')) {
+    if (req.path.startsWith('/api') || req.path.startsWith('/assets') || req.path.startsWith('/favicon') || req.path.startsWith('/icons')) {
       return next();
     }
-    res.sendFile(path.join(clientBuildPath, 'index.html'));
+    res.sendFile(path.join(clientBuildPath, 'index.html'), (err) => {
+      if (err) {
+        next(err);
+      }
+    });
   });
+} else {
+  console.warn('⚠️  Frontend build not found at:', clientBuildPath);
 }
 
 // Error handling middleware
