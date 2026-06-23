@@ -5,27 +5,27 @@ const HeroSlideshow = () => {
   
 const slides = [
     {
-      image: '/images/heroSlideshow/suit.jpg',
+      image: '/images/HeroSlideshow/suit.jpg',
       title: 'Premium Suits',
       subtitle: 'Timeless elegance for every occasion'
     },
     {
-      image: '/images/heroSlideshow/black%20shirt.webp',
+      image: '/images/HeroSlideshow/black%20shirt.webp',
       title: 'Custom Shirts',
       subtitle: 'Perfect fit, premium fabrics'
     },
     {
-      image: '/images/heroSlideshow/pant.webp',
+      image: '/images/HeroSlideshow/pant.webp',
       title: 'Tailored Trousers',
       subtitle: 'Modern slim fit collection'
     },
     {
-      image: '/images/heroSlideshow/overcoat.webp',
+      image: '/images/HeroSlideshow/overcoat.webp',
       title: 'Classic Overcoats',
       subtitle: 'Sophisticated winter elegance'
     },
     {
-      image: '/images/heroSlideshow/traditional%20dress.jpg',
+      image: '/images/HeroSlideshow/traditional%20dress.jpg',
       title: 'Wedding Collection',
       subtitle: 'Perfect for your special day'
     },
