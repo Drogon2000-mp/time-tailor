@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: time-tailor-api
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        fromConfigNumeric: MONGODB_URI
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLIENT_URL
+        value: https://time-tailor11.onrender.com
+      - key: SERVER_URL
+        value: https://time-tailor11.onrender.com
+      - key: FRONTEND_URL
+        value: https://time-tailor11.onrender.com
+      - key: ESEWA_SECRET_KEY
+        sync: false
+      - key: ESEWA_MERCHANT_ID
+        value: EPAYTEST
