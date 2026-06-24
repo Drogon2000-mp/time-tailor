@@ -1,7 +1,8 @@
 .hero-slideshow {
   position: relative;
-  height: 100vh;
   width: 100%;
+  height: min(100vh, 85svh);
+  min-height: 60vh;
   overflow: hidden;
 }
 

@@ -50,8 +50,29 @@
   }
 }
 
+html, body {
+  min-width: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
+  min-width: 0;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+img, picture, video, canvas, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+button, input, textarea, select {
+  min-width: 0;
 }
 
 #root {
@@ -64,6 +85,19 @@ body {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+}
+
+img, picture, video, canvas, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+button, input, textarea, select {
+  min-width: 0;
+}
+
+section {
+  scroll-margin-top: 100px;
 }
 
 h1,
