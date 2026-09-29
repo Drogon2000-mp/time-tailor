@@ -285,10 +285,49 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI; // Removed localhost fallback
 
+const MONGO_CONNECT_RETRIES = Number(process.env.MONGODB_CONNECT_RETRIES || 3);
+const MONGO_RETRY_DELAY_MS = Number(process.env.MONGODB_RETRY_DELAY_MS || 3000);
+
+const describeMongoError = (error) => {
+  const message = error?.message || String(error);
+  if (/bad auth|authentication failed/i.test(message)) {
+    return 'Credentials in MONGODB_URI were rejected by the server.';
+  }
+  if (/ENOTFOUND|querySrv|getaddrinfo/i.test(message)) {
+    return 'The cluster hostname in MONGODB_URI could not be resolved.';
+  }
+  if (/IP that isn.t whitelisted|not whitelisted|connection .* closed/i.test(message)) {
+    return 'The host IP is likely blocked by the Atlas network access list.';
+  }
+  if (/timed out|Server selection timed out/i.test(message)) {
+    return 'No cluster node was reachable before the selection timeout (network access list or cluster state).';
+  }
+  return null;
+};
+
+const connectMongo = async () => {
+  for (let attempt = 1; attempt <= MONGO_CONNECT_RETRIES; attempt++) {
+    try {
+      await mongoose.connect(MONGODB_URI, {
+        serverSelectionTimeoutMS: Number(process.env.MONGODB_SERVER_SELECTION_TIMEOUT_MS || 15000)
+      });
+      return;
+    } catch (error) {
+      const hint = describeMongoError(error);
+      console.error(
+        `❌ MongoDB connection attempt ${attempt}/${MONGO_CONNECT_RETRIES} failed: ${error?.name || 'Error'}: ${error?.message || error}`
+      );
+      if (hint) console.error(`   Hint: ${hint}`);
+      if (attempt === MONGO_CONNECT_RETRIES) throw error;
+      await new Promise((resolve) => setTimeout(resolve, MONGO_RETRY_DELAY_MS));
+    }
+  }
+};
+
 // Start server with or without MongoDB
 const startServer = async () => {
   try {
-    await mongoose.connect(MONGODB_URI);
+    await connectMongo();
     console.log('✅ Connected to MongoDB'); 
     // Call the admin seeding function after connection is established
     await seedAdmin();
