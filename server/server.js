@@ -177,7 +177,10 @@ const corsOptions = {
     // Allow requests with no origin (e.g., curl)
     if (!origin) return callback(null, true);
 
-    if (allowedOrigins.includes(origin)) {
+    const isLocalDevOrigin = process.env.NODE_ENV !== 'production' &&
+      /^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin);
+
+    if (allowedOrigins.includes(origin) || isLocalDevOrigin) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -336,7 +339,7 @@ const startServer = async () => {
     process.exit(1);
   }
   
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
     const publicUrl = process.env.SERVER_URL || process.env.FRONTEND_URL || (process.env.RENDER_EXTERNAL_HOSTNAME ? `https://${process.env.RENDER_EXTERNAL_HOSTNAME}` : `http://localhost:${PORT}`);
     console.log(`📍 API available at ${publicUrl}/api`);
@@ -344,15 +347,37 @@ const startServer = async () => {
       console.log(`⚠️  Database: Not connected (some features will not work)`);
     }
   });
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.error(`❌ Port ${PORT} is already in use. Please stop the other process or use a different port.`);
+      console.error(`   To find and kill the process: lsof -ti:${PORT} | xargs kill -9`);
+      process.exit(1);
+    } else {
+      console.error('❌ Server error:', err);
+      process.exit(1);
+    }
+  });
+
+  return server;
 };
 
 startServer();
 
 // Graceful shutdown
-process.on('SIGINT', async () => {
-  console.log('\n🛑 Shutting down gracefully...');
-  await mongoose.connection.close();
-  process.exit(0);
-});
+const gracefulShutdown = async (signal) => {
+  console.log(`\n🛑 ${signal} received. Shutting down gracefully...`);
+  try {
+    await mongoose.connection.close();
+    console.log('✅ MongoDB connection closed.');
+    process.exit(0);
+  } catch (err) {
+    console.error('❌ Error during shutdown:', err);
+    process.exit(1);
+  }
+};
+
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 
 export default app;

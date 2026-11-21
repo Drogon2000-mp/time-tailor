@@ -3,11 +3,15 @@ services:
     name: time-tailor-api
     env: node
     plan: free
-    buildCommand: npm install && npm run build
+    region: oregon
+    buildCommand: npm ci && npm run build
     startCommand: npm start
+    healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
+      - key: PORT
+        value: 5000
       - key: MONGODB_URI
         sync: false
       - key: JWT_SECRET
@@ -18,7 +22,25 @@ services:
         value: https://time-tailor11.onrender.com
       - key: FRONTEND_URL
         value: https://time-tailor11.onrender.com
-      - key: ESEWA_SECRET_KEY
+      - key: ADMIN_EMAIL
+        value: admin@timetailor.com
+      - key: ADMIN_PASSWORD
+        value: Admin@123
+      - key: ADMIN_NAME
+        value: System Administrator
+      - key: CLOUDINARY_CLOUD_NAME
         sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: ESEWA_PRODUCT_CODE
+        value: EPAYTEST
       - key: ESEWA_MERCHANT_ID
         value: EPAYTEST
+      - key: ESEWA_SECRET_KEY
+        sync: false
+      - key: ESEWA_SUCCESS_URL
+        value: https://time-tailor11.onrender.com/payment-success
+      - key: ESEWA_FAILURE_URL
+        value: https://time-tailor11.onrender.com/payment-failure

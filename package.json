@@ -10,6 +10,9 @@
   "scripts": {
     "build": "npm --workspace=client run build",
     "start": "npm --workspace=server start",
-    "dev": "npm --workspace=server run dev"
+    "dev": "npm --workspace=server run dev",
+    "dev:client": "npm --workspace=client run dev",
+    "kill-port": "lsof -ti:5000 | xargs kill -9 || true",
+    "prestart": "npm run kill-port"
   }
 }
